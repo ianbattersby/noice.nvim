@@ -61,6 +61,8 @@ M.defaults = {
     format = "notify",
     replace = false,
     merge = false,
+    on_open = nil,
+    on_close = nil,
   },
   split = {
     backend = "split",

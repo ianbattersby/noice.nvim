@@ -7,8 +7,10 @@ local Manager = require("noice.message.manager")
 ---@class NoiceNotifyOptions
 ---@field title string
 ---@field level? string|number Message log level
----@field merge boolean Merge messages into one Notification or create separate notifications
+---@field merge boolean merge messages into one Notification or create separate notifications
 ---@field replace boolean Replace existing notification or create a new one
+---@field on_open? function callback for when window opens|function|table
+---@field on_close? function callback for when window opens|function|table
 ---@field render? notify.RenderFun|string
 ---@field timeout? integer
 local defaults = {
@@ -16,6 +18,8 @@ local defaults = {
   merge = false,
   level = nil, -- vim.log.levels.INFO,
   replace = false,
+  on_open = nil,
+  on_close = nil,
 }
 
 ---@class NotifyInstance
@@ -125,13 +129,44 @@ function NotifyView:_notify(msg)
       if self._opts.merge then
         self.win = win
       end
+
+      -- Really not happy about using defer here :'(
+      vim.defer_fn(function()
+        if self._opts.on_open then
+          local notif = self.notif
+
+          vim.validate({
+            ["on_open.fn"] = { self._opts.on_open, "f" },
+            ["on_open.win"] = { win, "n" },
+            ["on_open.notif"] = { notif, "t" },
+          })
+
+          self._opts.on_open(win, notif)
+        end
+      end, 100)
     end,
-    on_close = function()
+    on_close = function(win)
       self.notif = nil
+
       for _, m in ipairs(msg.messages) do
         m.opts.notify_id = nil
       end
       self.win = nil
+
+      -- Really not happy about using defer here :'(
+      vim.defer_fn(function()
+        if self._opts.on_close then
+          local notif = self.notif
+
+          vim.validate({
+            ["on_close.fn"] = { self._opts.on_close, "f" },
+            ["on_close.win"] = { win, "n" },
+            ["on_close.notif"] = { notif, "t" },
+          })
+
+          self._opts.on_close(win, notif)
+        end
+      end, 100)
     end,
     render = Util.protect(self:notify_render(msg.messages, self._opts.render, msg.content)),
   }

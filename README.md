@@ -411,12 +411,14 @@ String or can also be a table like:
 
 ### Notify Options
 
-| Option      | Type             | Default  | Description                                                                                                                             |
-| ----------- | ---------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **title**   | `string`         | `nil`    | title to be used for the notification. Uses `Message.title` if available.                                                               |
-| **replace** | `boolean`        | `true`   | when true, messages routing to the same notify instance will replace existing messages instead of pushing a new notification every time |
-| **merge**   | `boolean`        | `true`   | Merge messages into one Notification or create separate notifications                                                                   |
-| **level**   | `number\|string` | `"info"` | notification level. Uses `Message.level` if available.                                                                                  |
+| Option       | Type             | Default  | Description                                                                                                                             |
+| ------------ | ---------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **title**    | `string`         | `nil`    | title to be used for the notification. Uses `Message.title` if available.                                                               |
+| **replace**  | `boolean`        | `true`   | when true, messages routing to the same notify instance will replace existing messages instead of pushing a new notification every time |
+| **merge**    | `boolean`        | `true`   | merge messages into one Notification or create separate notifications                                                                   |
+| **level**    | `number\|string` | `"info"` | notification level. Uses `Message.level` if available.                                                                                  |
+| **on_open**  | `function`       | `nil`    | callback for when window opens, receives window and notif as arguments.
+| **on_close** | `function`       | `nil`    | callback for when window closes, receives window and notif as arguments. 
 
 ### Virtual Text Options
 
