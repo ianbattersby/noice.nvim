@@ -18,7 +18,6 @@ function M.enable()
   M.reset_augroup()
   M.fix_incsearch()
   M.fix_input()
-  M.fix_nohlsearch()
   M.fix_redraw()
   M.fix_cmp()
   M.fix_vim_sleuth()
@@ -41,7 +40,8 @@ end
 function M.fix_nohlsearch()
   M.fix_nohlsearch = Util.interval(30, function()
     if vim.v.hlsearch == 0 then
-      require("noice.message.manager").clear({ kind = "search_count" })
+      local m = require("noice.ui.msg").get("msg_show", "search_count")
+      require("noice.message.manager").remove(m)
     end
   end, {
     enabled = function()
@@ -234,6 +234,7 @@ function M.cmdline_force_redraw()
   end
 end
 
+---@type string?
 M._guicursor = nil
 function M.hide_cursor()
   if M._guicursor == nil then
@@ -245,7 +246,12 @@ end
 
 function M.show_cursor()
   if M._guicursor then
-    vim.go.guicursor = M._guicursor
+    -- we need to reset all first and then wait for some time before resetting the guicursor. See #114
+    vim.go.guicursor = "a:"
+    vim.defer_fn(function()
+      vim.go.guicursor = M._guicursor
+      M._guicursor = nil
+    end, 100)
   end
 end
 
