@@ -81,7 +81,7 @@ function M.on_show(event, kind, content, replace_last)
   local message
   if kind == M.kinds.search_count then
     message = M.get(event, kind)
-    Hacks.fix_nohlsearch(message)
+    Hacks.fix_nohlsearch()
   else
     message = Message(event, kind)
   end
@@ -103,6 +103,8 @@ end
 function M.on_clear()
   State.clear("msg_show")
   M.last = nil
+  local message = M.get(M.events.show, M.kinds.search_count)
+  Manager.remove(message)
 end
 
 -- mode like recording...
