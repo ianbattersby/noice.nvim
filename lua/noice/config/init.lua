@@ -48,6 +48,13 @@ function M.defaults()
       -- Icons for completion item kinds (see defaults at noice.config.icons.kinds)
       kind_icons = {}, -- set to `false` to disable icons
     },
+    -- default options for require('noice').redirect
+    -- see the section on Command Redirection
+    ---@type NoiceRouteConfig
+    redirect = {
+      view = "popup",
+      filter = { event = "msg_show" },
+    },
     -- You can add any custom commands below that will be available with `:Noice command`
     ---@type table<string, NoiceCommand>
     commands = {
@@ -186,6 +193,7 @@ function M.defaults()
       long_message_to_split = false, -- long messages will be sent to a split
       inc_rename = false, -- enables an input dialog for inc-rename.nvim
       lsp_doc_border = false, -- add a border to hover docs and signature help
+      cmdline_output_to_split = false, -- send the output of a command you executed in the cmdline to a split
     },
     throttle = 1000 / 30, -- how frequently does Noice need to check for ui updates? This has no effect when in blocking mode.
     ---@type NoiceConfigViews
