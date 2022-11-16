@@ -160,6 +160,7 @@ M.defaults = {
     align = "message-right",
     timeout = 2000,
     reverse = true,
+    focusable = false,
     position = {
       row = -1,
       col = "100%",
